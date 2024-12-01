@@ -53,3 +53,4 @@ dkms.conf
 
 control-utils-venv/
 .pytest_cache/
+__pycache__/
