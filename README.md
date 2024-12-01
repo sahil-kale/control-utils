@@ -1,2 +1,2 @@
-# template-embedded-repo
-A simple embedded repo with scripts and such ready to build
+# Control Utils
+A C repository with common control utilities intended for use in real-time embedded systems
