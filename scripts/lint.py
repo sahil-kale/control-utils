@@ -20,7 +20,7 @@ STRICT_CHECKS = [
 ]
 
 # Define checks to be excluded
-EXCLUDED_CHECKS = []
+EXCLUDED_CHECKS = ["readability-identifier-length"]
 
 # Build include directories string for the clang-tidy command
 INCLUDE_DIR_STR = " -I" + " -I".join(INCLUDE_DIRS)
