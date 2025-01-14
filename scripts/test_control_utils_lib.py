@@ -1,9 +1,9 @@
 import os
 import argparse
 
-TESTS_EXE_NAME = "c_source_tests"
+TESTS_EXE_NAME = "control_utils_lib_tests"
 
-C_SOURCE_TESTS_DIR = "c_source"
+C_SOURCE_TESTS_DIR = "control_utils_lib"
 
 
 def main(debug):
