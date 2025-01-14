@@ -20,29 +20,31 @@ typedef struct {
     float last_error;
     float output;
     bool initialized;
+
+    control_utils_pid_config_t const *config;
+    control_utils_pid_limits_t const *limits;
 } control_utils_pid_data_t;
 
 /**
  * @brief Initialize PID controller
  *
  * @param pid_data Pointer to PID data structure
+ * @param pid_config Pointer to PID gains structure
+ * @param pid_limits Pointer to PID limits structure
  *
  * @return true if initialization was successful
  */
-bool control_utils_pid_init(control_utils_pid_data_t *pid_data);
+bool control_utils_pid_init(control_utils_pid_data_t *pid_data, control_utils_pid_config_t const *const pid_config,
+                            control_utils_pid_limits_t const *const pid_limits);
 
 /**
  * @brief Run PID controller
  *
  * @param error Error value (error = setpoint - output)
  * @param pid_data Pointer to PID data structure
- * @param pid_config Pointer to PID gains structure
- * @param pid_limits Pointer to PID limits structure
  *
  * @return true if PID controller was run successfully, false otherwise
  */
-bool control_utils_pid_run(float error, control_utils_pid_data_t *const pid_data,
-                           control_utils_pid_config_t const *const pid_config,
-                           control_utils_pid_limits_t const *const pid_limits);
+bool control_utils_pid_run(float error, control_utils_pid_data_t *const pid_data);
 
 #endif  // PID_H
