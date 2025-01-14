@@ -10,7 +10,7 @@
  *
  * @return Clamped value
  */
-inline float control_util_clamp(float value, float min, float max) {
+inline float control_utils_clamp(float value, float min, float max) {
     float ret = value;
     if (value < min) {
         ret = min;

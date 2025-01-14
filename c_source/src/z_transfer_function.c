@@ -4,8 +4,8 @@
 
 #include "util.h"
 
-Z_tf_init_E Z_tf_init(Z_TF_T *tf) {
-    Z_tf_init_E ret = Z_TF_INIT_OK;
+control_utils_z_tf_init_E control_utils_z_tf_init(control_utils_z_tf_t *tf) {
+    control_utils_z_tf_init_E ret = Z_TF_INIT_OK;
 
     if (tf == NULL) {
         ret = Z_TF_INIT_ERROR_INVALID_POINTER;
@@ -26,8 +26,8 @@ Z_tf_init_E Z_tf_init(Z_TF_T *tf) {
     return ret;
 }
 
-Z_tf_step_E Z_tf_step(Z_TF_T *tf, float input, float *output) {
-    Z_tf_step_E ret = Z_TF_STEP_OK;
+control_utils_z_tf_step_E control_utils_z_tf_step(control_utils_z_tf_t *tf, float input, float *output) {
+    control_utils_z_tf_step_E ret = Z_TF_STEP_OK;
 
     if ((tf == NULL) || (output == NULL)) {
         ret = Z_TF_STEP_ERROR_INVALID_POINTER;
