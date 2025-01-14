@@ -13,7 +13,7 @@ typedef struct {
     float kd;  /// Derivative gain
 
     float dt;  /// Time step (seconds)
-} pid_gains_t;
+} pid_config_t;
 
 typedef struct {
     float accumulator;
@@ -36,11 +36,12 @@ bool control_utils_pid_init(pid_data_t *pid_data);
  *
  * @param error Error value (error = setpoint - output)
  * @param pid_data Pointer to PID data structure
- * @param pid_gains Pointer to PID gains structure
+ * @param pid_config Pointer to PID gains structure
  * @param pid_limits Pointer to PID limits structure
  *
  * @return true if PID controller was run successfully, false otherwise
  */
-bool control_utils_pid_run(float error, pid_data_t *pid_data, pid_gains_t *pid_gains, pid_limits_t *pid_limits);
+bool control_utils_pid_run(float error, pid_data_t *const pid_data, pid_config_t const *const pid_config,
+                           pid_limits_t const *const pid_limits);
 
 #endif  // PID_H
