@@ -10,7 +10,7 @@ TEST(z_transfer_function_test, test_init) {
     static float numerator[] = {0, 1, 2, 4};
     static float denominator[] = {1, 0, 3, 5};
 
-    DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
+    CONTROL_UTILS_DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
     CHECK_EQUAL(3, tf.order);
 
     // make the numerator and denominator buffers all 243.0
@@ -19,7 +19,7 @@ TEST(z_transfer_function_test, test_init) {
         tf.denominator_buffer[i] = 243.0;
     }
 
-    Z_tf_init_E result = Z_tf_init(&tf);
+    control_utils_z_tf_init_E result = control_utils_z_tf_init(&tf);
 
     CHECK_EQUAL(Z_TF_INIT_OK, result);
     // check that the numerator and denominator buffers are initialized to 0
@@ -35,23 +35,23 @@ TEST(z_transfer_function_test, test_invalid_denominator) {
     static float numerator[] = {0, 1, 2, 4};
     static float denominator[] = {0, 0, 3, 5};
 
-    DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
+    CONTROL_UTILS_DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
 
-    CHECK_EQUAL(Z_tf_init(&tf), Z_TF_INIT_ERROR_TF_NOT_PROPER);
+    CHECK_EQUAL(control_utils_z_tf_init(&tf), Z_TF_INIT_ERROR_TF_NOT_PROPER);
 }
 
 TEST(z_transfer_function_test, test_null_pointer) {
-    CHECK_EQUAL(Z_TF_INIT_ERROR_INVALID_POINTER, Z_tf_init(NULL));
-    CHECK_EQUAL(Z_TF_STEP_ERROR_INVALID_POINTER, Z_tf_step(NULL, 0, NULL));
+    CHECK_EQUAL(Z_TF_INIT_ERROR_INVALID_POINTER, control_utils_z_tf_init(NULL));
+    CHECK_EQUAL(Z_TF_STEP_ERROR_INVALID_POINTER, control_utils_z_tf_step(NULL, 0, NULL));
 }
 
 TEST(z_transfer_function_test, test_convolution) {
     static float numerator[] = {0, 2, 3, 4};
     static float denominator[] = {1, 2, 3, 4};
 
-    DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
+    CONTROL_UTILS_DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
 
-    Z_tf_init(&tf);
+    control_utils_z_tf_init(&tf);
 
     float output = 0;
 
@@ -59,7 +59,7 @@ TEST(z_transfer_function_test, test_convolution) {
     float check_output_buffer[5] = {0, 2, 1, 1, -4};
 
     for (size_t i = 0; i < 5; i++) {
-        CHECK_EQUAL(Z_tf_step(&tf, check_input_buffer[i], &output), Z_TF_STEP_OK);
+        CHECK_EQUAL(control_utils_z_tf_step(&tf, check_input_buffer[i], &output), Z_TF_STEP_OK);
         CHECK_EQUAL(check_output_buffer[i], output);
     }
 }
@@ -68,9 +68,9 @@ TEST(z_transfer_function_test, test_not_initialized_step) {
     static float numerator[] = {0, 2, 3, 4};
     static float denominator[] = {1, 2, 3, 4};
 
-    DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
+    CONTROL_UTILS_DECLARE_Z_TRANSFER_FUNCTION(tf, numerator, denominator);
 
     float output = 0;
 
-    CHECK_EQUAL(Z_TF_STEP_ERROR_NOT_INITIALIZED, Z_tf_step(&tf, 0, &output));
+    CHECK_EQUAL(Z_TF_STEP_ERROR_NOT_INITIALIZED, control_utils_z_tf_step(&tf, 0, &output));
 }

@@ -7,7 +7,7 @@ extern "C" {
 TEST_GROUP(pid_test){void setup(){} void teardown(){}};
 
 TEST(pid_test, check_init) {
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
 
     pid_data.accumulator = 132132.0;
     pid_data.last_error = -160.0;
@@ -23,9 +23,9 @@ TEST(pid_test, check_init) {
 TEST(pid_test, check_null) { CHECK_EQUAL(false, control_utils_pid_init(NULL)); }
 
 TEST(pid_test, check_run_kp) {
-    pid_config_t pid_config = {20.0, 0.0, 0.0, 0.1};
+    control_utils_pid_config_t pid_config = {20.0, 0.0, 0.0, 0.1};
 
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
@@ -35,9 +35,9 @@ TEST(pid_test, check_run_kp) {
 }
 
 TEST(pid_test, check_run_ki) {
-    pid_config_t pid_config = {0.0, 20.0, 0.0, 0.1};
+    control_utils_pid_config_t pid_config = {0.0, 20.0, 0.0, 0.1};
 
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
@@ -53,10 +53,10 @@ TEST(pid_test, check_run_ki) {
 
 TEST(pid_test, check_run_ki_max_windup) {
     const float dt = 0.1;
-    pid_config_t pid_config = {0.0, 20.0, 0.0, dt};
-    pid_limits_t pid_limits = {100.0};
+    control_utils_pid_config_t pid_config = {0.0, 20.0, 0.0, dt};
+    control_utils_pid_limits_t pid_limits = {100.0};
 
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
@@ -77,10 +77,10 @@ TEST(pid_test, check_run_ki_max_windup) {
 }
 
 TEST(pid_test, windup_disabled) {
-    pid_config_t pid_config = {0.0, 20.0, 0.0, 0.1};
-    pid_limits_t pid_limits = {0.0};
+    control_utils_pid_config_t pid_config = {0.0, 20.0, 0.0, 0.1};
+    control_utils_pid_limits_t pid_limits = {0.0};
 
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
@@ -95,9 +95,9 @@ TEST(pid_test, windup_disabled) {
 }
 
 TEST(pid_test, check_run_kd) {
-    pid_config_t pid_config = {0.0, 0.0, 20.0, 0.1};
+    control_utils_pid_config_t pid_config = {0.0, 0.0, 20.0, 0.1};
 
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
@@ -111,9 +111,9 @@ TEST(pid_test, check_run_kd) {
 }
 
 TEST(pid_test, invalid_dt) {
-    pid_config_t pid_config = {20.0, 0.0, 0.0, 0.0};
+    control_utils_pid_config_t pid_config = {20.0, 0.0, 0.0, 0.0};
 
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
@@ -124,11 +124,11 @@ TEST(pid_test, invalid_dt) {
 
 TEST(pid_test, invalid_params) {
     // Test with NULL pid_data
-    pid_config_t pid_config = {20.0, 0.0, 0.0, 0.1};
+    control_utils_pid_config_t pid_config = {20.0, 0.0, 0.0, 0.1};
     CHECK_EQUAL(false, control_utils_pid_run(10.0, NULL, &pid_config, NULL));
 
     // Test with uninitialized pid_data
-    pid_data_t pid_data;
+    control_utils_pid_data_t pid_data;
     pid_data.initialized = false;
     CHECK_EQUAL(false, control_utils_pid_run(10.0, &pid_data, &pid_config, NULL));
 }
