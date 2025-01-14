@@ -17,22 +17,24 @@ bool control_utils_pid_init(pid_data_t *pid_data) {
     return ret;
 }
 
-bool control_utils_pid_run(float error, pid_data_t *pid_data, pid_gains_t *pid_gains, pid_limits_t *pid_limits) {
+bool control_utils_pid_run(float error, pid_data_t *const pid_data, pid_config_t const *const pid_config,
+                           pid_limits_t const *const pid_limits) {
     bool ret = false;
 
     const bool pid_data_initialized = (pid_data != NULL) && (pid_data->initialized);
-    const bool pid_gains_initialized = (pid_gains != NULL) && (pid_gains->dt > 0.0);
+    const bool pid_config_initialized = (pid_config != NULL) && (pid_config->dt > 0.0);
     const bool pid_limits_initialized = (pid_limits != NULL) && (pid_limits->max_windup > 0.0);
 
-    if (pid_data_initialized && pid_gains_initialized) {
-        pid_data->accumulator += error * pid_gains->dt;
+    if (pid_data_initialized && pid_config_initialized) {
+        // We prescale the integral gain by ki to make this play nicer with gain scheduled controllers
+        pid_data->accumulator += error * pid_config->dt * pid_config->ki;
         if (pid_limits_initialized) {
             pid_data->accumulator = control_util_clamp(pid_data->accumulator, -pid_limits->max_windup, pid_limits->max_windup);
         }
 
-        const float derivative = (error - pid_data->last_error) / pid_gains->dt;
+        const float derivative = (error - pid_data->last_error) / pid_config->dt;
 
-        pid_data->output = pid_gains->kp * error + pid_gains->ki * pid_data->accumulator + pid_gains->kd * derivative;
+        pid_data->output = pid_config->kp * error + pid_data->accumulator + pid_config->kd * derivative;
         pid_data->last_error = error;
         ret = true;
     }

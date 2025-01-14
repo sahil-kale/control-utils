@@ -23,19 +23,19 @@ TEST(pid_test, check_init) {
 TEST(pid_test, check_null) { CHECK_EQUAL(false, control_utils_pid_init(NULL)); }
 
 TEST(pid_test, check_run_kp) {
-    pid_gains_t pid_gains = {20.0, 0.0, 0.0, 0.1};
+    pid_config_t pid_config = {20.0, 0.0, 0.0, 0.1};
 
     pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
-    ret = control_utils_pid_run(10.0, &pid_data, &pid_gains, NULL);
+    ret = control_utils_pid_run(10.0, &pid_data, &pid_config, NULL);
     CHECK_EQUAL(true, ret);
     DOUBLES_EQUAL(200.0, pid_data.output, 0.01);
 }
 
 TEST(pid_test, check_run_ki) {
-    pid_gains_t pid_gains = {0.0, 20.0, 0.0, 0.1};
+    pid_config_t pid_config = {0.0, 20.0, 0.0, 0.1};
 
     pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
@@ -43,7 +43,7 @@ TEST(pid_test, check_run_ki) {
 
     float integral = 0.0;
     for (uint8_t i = 0; i < 10; i++) {
-        ret = control_utils_pid_run(10.0, &pid_data, &pid_gains, NULL);
+        ret = control_utils_pid_run(10.0, &pid_data, &pid_config, NULL);
         integral += 10.0 * 20.0 * 0.1;
         CHECK_EQUAL(true, ret);
     }
@@ -52,7 +52,8 @@ TEST(pid_test, check_run_ki) {
 }
 
 TEST(pid_test, check_run_ki_max_windup) {
-    pid_gains_t pid_gains = {0.0, 20.0, 0.0, 0.1};
+    const float dt = 0.1;
+    pid_config_t pid_config = {0.0, 20.0, 0.0, dt};
     pid_limits_t pid_limits = {100.0};
 
     pid_data_t pid_data;
@@ -61,19 +62,22 @@ TEST(pid_test, check_run_ki_max_windup) {
 
     float integral = 0.0;
     for (uint8_t i = 0; i < 10; i++) {
-        ret = control_utils_pid_run(10.0, &pid_data, &pid_gains, &pid_limits);
-        integral += 10.0 * 20.0 * 0.1;
-        if (integral > 10.0) {
-            integral = 10.0;
+        const float err = 10.0;
+        ret = control_utils_pid_run(err, &pid_data, &pid_config, &pid_limits);
+        integral += err * dt * pid_config.ki;
+
+        if (integral >= pid_limits.max_windup) {
+            integral = pid_limits.max_windup;
         }
+
         CHECK_EQUAL(true, ret);
     }
 
-    DOUBLES_EQUAL(integral * 20, pid_data.output, 0.01);
+    DOUBLES_EQUAL(pid_limits.max_windup, pid_data.output, 0.01);
 }
 
 TEST(pid_test, windup_disabled) {
-    pid_gains_t pid_gains = {0.0, 20.0, 0.0, 0.1};
+    pid_config_t pid_config = {0.0, 20.0, 0.0, 0.1};
     pid_limits_t pid_limits = {0.0};
 
     pid_data_t pid_data;
@@ -82,7 +86,7 @@ TEST(pid_test, windup_disabled) {
 
     float integral = 0.0;
     for (uint8_t i = 0; i < 10; i++) {
-        ret = control_utils_pid_run(10.0, &pid_data, &pid_gains, &pid_limits);
+        ret = control_utils_pid_run(10.0, &pid_data, &pid_config, &pid_limits);
         integral += 10.0 * 20.0 * 0.1;
         CHECK_EQUAL(true, ret);
     }
@@ -91,40 +95,40 @@ TEST(pid_test, windup_disabled) {
 }
 
 TEST(pid_test, check_run_kd) {
-    pid_gains_t pid_gains = {0.0, 0.0, 20.0, 0.1};
+    pid_config_t pid_config = {0.0, 0.0, 20.0, 0.1};
 
     pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
-    ret = control_utils_pid_run(10.0, &pid_data, &pid_gains, NULL);
+    ret = control_utils_pid_run(10.0, &pid_data, &pid_config, NULL);
     CHECK_EQUAL(true, ret);
     DOUBLES_EQUAL((10 / 0.1 * 20), pid_data.output, 0.01);
 
-    ret = control_utils_pid_run(20.0, &pid_data, &pid_gains, NULL);
+    ret = control_utils_pid_run(20.0, &pid_data, &pid_config, NULL);
     CHECK_EQUAL(true, ret);
     DOUBLES_EQUAL((10 / 0.1 * 20), pid_data.output, 0.01);
 }
 
 TEST(pid_test, invalid_dt) {
-    pid_gains_t pid_gains = {20.0, 0.0, 0.0, 0.0};
+    pid_config_t pid_config = {20.0, 0.0, 0.0, 0.0};
 
     pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data);
     CHECK_EQUAL(true, ret);
 
-    ret = control_utils_pid_run(10.0, &pid_data, &pid_gains, NULL);
+    ret = control_utils_pid_run(10.0, &pid_data, &pid_config, NULL);
     CHECK_EQUAL(false, ret);
     DOUBLES_EQUAL(0.0, pid_data.output, 0.01);
 }
 
 TEST(pid_test, invalid_params) {
     // Test with NULL pid_data
-    pid_gains_t pid_gains = {20.0, 0.0, 0.0, 0.1};
-    CHECK_EQUAL(false, control_utils_pid_run(10.0, NULL, &pid_gains, NULL));
+    pid_config_t pid_config = {20.0, 0.0, 0.0, 0.1};
+    CHECK_EQUAL(false, control_utils_pid_run(10.0, NULL, &pid_config, NULL));
 
     // Test with uninitialized pid_data
     pid_data_t pid_data;
     pid_data.initialized = false;
-    CHECK_EQUAL(false, control_utils_pid_run(10.0, &pid_data, &pid_gains, NULL));
+    CHECK_EQUAL(false, control_utils_pid_run(10.0, &pid_data, &pid_config, NULL));
 }
