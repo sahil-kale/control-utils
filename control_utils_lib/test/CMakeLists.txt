@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(This c_source_tests)
+set(This control_utils_lib_tests)
 
 set(BINARY ${CMAKE_PROJECT_NAME})
 
