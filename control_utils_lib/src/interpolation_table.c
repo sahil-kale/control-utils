@@ -30,13 +30,20 @@ bool control_utils_interpolation_table_interpolate(control_utils_interpolation_t
 
         bool found = false;
 
-        // Find the interval where x is located
+        // Find the interval where x is located. Note the size - 1, as we are looking at the interval [x[i], x[i+1])
         for (size_t i = 0; i < table->size - 1; i++) {
             if ((x >= table->x[i]) && (x < table->x[i + 1])) {
                 idx = i;
                 // Only assign slope here, as we will use the fact that if slope is not calculated here it will be 0, thereby only
                 // returning the y value
-                slope = table->slopeBuffer[i];
+
+                if (table->slopeBufferSize > 0U) {
+                    slope = table->slopeBuffer[i];
+                } else {
+                    const float x_diff = table->x[i + 1] - table->x[i];
+                    const float y_diff = table->y[i + 1] - table->y[i];
+                    slope = y_diff / x_diff;
+                }
                 found = true;
                 break;
             }
