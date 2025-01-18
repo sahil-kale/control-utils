@@ -21,6 +21,8 @@ typedef struct {
     float output;
     bool initialized;
 
+    float one_over_dt;
+
     control_utils_pid_config_t const *config;
     control_utils_pid_limits_t const *limits;
 } control_utils_pid_data_t;
