@@ -116,11 +116,7 @@ TEST(pid_test, invalid_dt) {
 
     control_utils_pid_data_t pid_data;
     bool ret = control_utils_pid_init(&pid_data, &pid_config, NULL);
-    CHECK_EQUAL(true, ret);
-
-    ret = control_utils_pid_run(10.0, &pid_data);
     CHECK_EQUAL(false, ret);
-    DOUBLES_EQUAL(0.0, pid_data.output, 0.01);
 }
 
 TEST(pid_test, invalid_params) {
