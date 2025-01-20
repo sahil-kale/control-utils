@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#include "util.h"
+#include "control_utils_util.h"
 
 bool control_utils_pid_init(control_utils_pid_data_t *pid_data, control_utils_pid_config_t const *const pid_config,
                             control_utils_pid_limits_t const *const pid_limits) {

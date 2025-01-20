@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "util.h"
+#include "control_utils_util.h"
 
 typedef struct {
     float *x;     /// X values - MUST BE ASCENDING (lookup value key)

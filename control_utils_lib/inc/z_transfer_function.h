@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "util.h"
+#include "control_utils_util.h"
 
 typedef enum { Z_TF_INIT_OK, Z_TF_INIT_ERROR_TF_NOT_PROPER, Z_TF_INIT_ERROR_INVALID_POINTER } control_utils_z_tf_init_E;
 typedef enum { Z_TF_STEP_OK, Z_TF_STEP_ERROR_NOT_INITIALIZED, Z_TF_STEP_ERROR_INVALID_POINTER } control_utils_z_tf_step_E;

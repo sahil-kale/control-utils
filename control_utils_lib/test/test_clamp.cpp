@@ -1,7 +1,7 @@
 #include "CppUTest/TestHarness.h"
 
 extern "C" {
-#include "util.h"
+#include "control_utils_util.h"
 }
 
 TEST_GROUP(clamp_test){void setup(){} void teardown(){}};
