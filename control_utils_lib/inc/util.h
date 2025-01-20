@@ -14,4 +14,6 @@
 
 #define IS_APPROX_ZERO(x) (fabsf(x) < EPSILON)
 
+#define CONTROL_UTILS_CLAMP(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+
 #endif

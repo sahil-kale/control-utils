@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#include "clamp.h"
+#include "util.h"
 
 bool control_utils_pid_init(control_utils_pid_data_t *pid_data, control_utils_pid_config_t const *const pid_config,
                             control_utils_pid_limits_t const *const pid_limits) {
@@ -41,7 +41,7 @@ bool control_utils_pid_run(float error, control_utils_pid_data_t *const pid_data
         pid_data->accumulator += error * pid_data->config->dt * pid_data->config->ki;
         if (pid_limits_initialized) {
             pid_data->accumulator =
-                control_utils_clamp(pid_data->accumulator, -pid_data->limits->max_windup, pid_data->limits->max_windup);
+                CONTROL_UTILS_CLAMP(pid_data->accumulator, -pid_data->limits->max_windup, pid_data->limits->max_windup);
         }
 
         const float derivative = (error - pid_data->last_error) * pid_data->one_over_dt;
