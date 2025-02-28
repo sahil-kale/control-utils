@@ -1,6 +1,10 @@
 #ifndef LOW_PASS_FILTER_H
 #define LOW_PASS_FILTER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 typedef struct {
@@ -29,5 +33,9 @@ bool control_utils_lpf_init(control_utils_lpf_t *lpf, float fc, float dt);
  * @note The output of the low pass filter is stored in the output field of the lpf struct
  */
 bool control_utils_lpf_step(control_utils_lpf_t *lpf, float input);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // LOW_PASS_FILTER_H

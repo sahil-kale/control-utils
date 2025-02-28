@@ -1,6 +1,10 @@
 #ifndef INTERPOLATION_TABLE_H
 #define INTERPOLATION_TABLE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -61,5 +65,9 @@ bool control_utils_interpolation_table_init(control_utils_interpolation_table_t 
  */
 bool control_utils_interpolation_table_interpolate(control_utils_interpolation_table_t const *const table, float x,
                                                    float *const y);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // INTERPOLATION_TABLE_H

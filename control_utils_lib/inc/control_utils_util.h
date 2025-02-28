@@ -1,5 +1,10 @@
 #ifndef UTIL_H
 #define UTIL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <math.h>  // For fabsf()
 
 #if __STDC_VERSION__ >= 201112L
@@ -15,5 +20,9 @@
 #define IS_APPROX_ZERO(x) (fabsf(x) < EPSILON)
 
 #define CONTROL_UTILS_CLAMP(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

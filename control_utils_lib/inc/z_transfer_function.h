@@ -1,5 +1,10 @@
 #ifndef Z_TRANSFER_FUNCTION_H
 #define Z_TRANSFER_FUNCTION_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -61,5 +66,9 @@ control_utils_z_tf_init_E control_utils_z_tf_init(control_utils_z_tf_t *tf);
  * @return control_utils_z_tf_step_E Z_TF_STEP_OK if the transfer function was updated successfully
  */
 control_utils_z_tf_step_E control_utils_z_tf_step(control_utils_z_tf_t *tf, float input, float *output);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // Z_TRANSFER_FUNCTION_H

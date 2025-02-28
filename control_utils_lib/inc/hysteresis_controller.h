@@ -1,5 +1,9 @@
 #ifndef HYSTERESIS_CONTROLLER_H
 #define HYSTERESIS_CONTROLLER_H
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 typedef struct {
@@ -35,5 +39,9 @@ bool control_utils_hysteresis_controller_init(
  */
 bool control_utils_hysteresis_controller_run(control_utils_hysteresis_controller_data_t *const hysteresis_controller_data,
                                              float input);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // HYSTERESIS_CONTROLLER_H

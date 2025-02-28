@@ -1,6 +1,10 @@
 #ifndef PID_H
 #define PID_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 typedef struct {
@@ -48,5 +52,9 @@ bool control_utils_pid_init(control_utils_pid_data_t *pid_data, control_utils_pi
  * @return true if PID controller was run successfully, false otherwise
  */
 bool control_utils_pid_run(float error, control_utils_pid_data_t *const pid_data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // PID_H
